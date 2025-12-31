@@ -31,5 +31,6 @@ public class RecipeIngredient {
     private String unit;
 
     // getters/setters
+    
 }
 
