@@ -8,10 +8,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Pivot between Recipe and Ingredient to manage the "ManyToMany" relation (a Recipe can get several Ingredient, but an Ingredient can be in several Recipe)
  */
+@Getter
+@Setter
 @Entity
 @Table(name = "recipe_ingredient")
 public class RecipeIngredient {
