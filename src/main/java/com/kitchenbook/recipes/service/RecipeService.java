@@ -1,5 +1,7 @@
 package com.kitchenbook.recipes.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -69,4 +71,25 @@ public class RecipeService {
 				)).toList()
 		);
 	}
+	
+	public List<RecipeResponseDto> findAll() {
+        return recipeRepository.findAll()
+                .stream()
+                .map(r -> new RecipeResponseDto(
+                        r.getId(),
+                        r.getTitle(),
+                        r.getDescription(),
+                        r.getServings(), 
+                        r.getRecipeIngredients()
+                        	.stream()
+                        	.map(i -> new RecipeIngredientResponseDto(
+                        			i.getIngredient().getId(), 
+                        			i.getIngredient().getName(), 
+                        			i.getQuantity(), 
+                        			i.getUnit()
+                			))
+                        	.toList()
+                ))
+                .toList();
+    }
 }
