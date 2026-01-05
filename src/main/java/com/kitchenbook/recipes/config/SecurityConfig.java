@@ -12,13 +12,24 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-            .csrf(csrf -> csrf.disable())
-            .authorizeHttpRequests(auth -> auth
-                .anyRequest().permitAll()
-            );
+    	http
+        // Désactiver CSRF (obligatoire pour H2)
+        .csrf(csrf -> csrf.disable())
 
-        return http.build();
+        // Autoriser swagger + h2
+        .authorizeHttpRequests(auth -> auth
+            .requestMatchers(
+                "/swagger-ui/**",
+                "/v3/api-docs/**",
+                "/h2-console/**"
+            ).permitAll()
+            .anyRequest().permitAll()
+        )
+
+        // Autoriser les iframes (OBLIGATOIRE pour H2)
+        .headers(headers -> headers.frameOptions().disable());
+
+    	return http.build();
     }
 }
 
