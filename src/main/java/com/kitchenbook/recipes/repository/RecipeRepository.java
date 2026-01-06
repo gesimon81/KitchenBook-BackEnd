@@ -6,4 +6,5 @@ import com.kitchenbook.recipes.entity.Recipe;
 
 public interface RecipeRepository extends JpaRepository<Recipe, Long> {
 
+	
 }
