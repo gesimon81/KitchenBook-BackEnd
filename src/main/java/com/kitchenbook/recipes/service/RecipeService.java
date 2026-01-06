@@ -11,6 +11,7 @@ import com.kitchenbook.recipes.dto.RecipeResponseDto;
 import com.kitchenbook.recipes.entity.Ingredient;
 import com.kitchenbook.recipes.entity.Recipe;
 import com.kitchenbook.recipes.entity.RecipeIngredient;
+import com.kitchenbook.recipes.mapper.RecipeMapper;
 import com.kitchenbook.recipes.repository.IngredientRepository;
 import com.kitchenbook.recipes.repository.RecipeRepository;
 
@@ -58,38 +59,27 @@ public class RecipeService {
 		//Enregistrer la nouvelle recette en base de données
 		Recipe savedRecipe = recipeRepository.save(recipe);
 		
-		return new RecipeResponseDto(
-				savedRecipe.getId(),
-				savedRecipe.getTitle(),
-				savedRecipe.getDescription(),
-				savedRecipe.getServings(),
-				savedRecipe.getRecipeIngredients().stream().map(ri -> new RecipeIngredientResponseDto(
-						ri.getIngredient().getId(),
-						ri.getIngredient().getName(),
-						ri.getQuantity(),
-						ri.getUnit()
-				)).toList()
-		);
+		return RecipeMapper.RecipeToDto(savedRecipe);
 	}
 	
 	public List<RecipeResponseDto> findAll() {
-        return recipeRepository.findAll()
+        /*return recipeRepository.findAll()
                 .stream()
-                .map(r -> new RecipeResponseDto(
-                        r.getId(),
-                        r.getTitle(),
-                        r.getDescription(),
-                        r.getServings(), 
-                        r.getRecipeIngredients()
-                        	.stream()
-                        	.map(i -> new RecipeIngredientResponseDto(
-                        			i.getIngredient().getId(), 
-                        			i.getIngredient().getName(), 
-                        			i.getQuantity(), 
-                        			i.getUnit()
-                			))
-                        	.toList()
-                ))
+                .map(r -> RecipeMapper.RecipeToDto(r))
+                .toList();*/
+		
+		//Method reference à utiliser quand une lambda n'utilise qu'une seule méthode existante
+		return recipeRepository.findAll()
+                .stream()
+                .map(RecipeMapper::RecipeToDto)
                 .toList();
+		
     }
+	
+	public RecipeResponseDto getRecipe(final Long id) {
+		Recipe recipe = recipeRepository.findById(id)
+	             .orElseThrow(() -> new RuntimeException("Recipe not found with id " + id));
+	
+		return RecipeMapper.RecipeToDto(recipe);
+	}
 }
