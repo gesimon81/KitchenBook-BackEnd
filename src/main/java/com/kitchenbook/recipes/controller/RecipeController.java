@@ -1,9 +1,11 @@
 package com.kitchenbook.recipes.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -42,5 +44,11 @@ public class RecipeController {
 	@GetMapping("/{id}")
 	public RecipeResponseDto getRecipeById(@PathVariable("id") Long id) {
 		return recipeService.getRecipe(id);
+	}
+	
+	@DeleteMapping("/{id}")
+	@ResponseStatus(HttpStatus.NO_CONTENT) //Renverra 204 si suppression ou 404 si Recipe non trouvé
+	public void deleteRecipe(@PathVariable Long id) {
+	    recipeService.deleteById(id);
 	}
 }

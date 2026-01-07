@@ -11,6 +11,7 @@ import com.kitchenbook.recipes.dto.RecipeResponseDto;
 import com.kitchenbook.recipes.entity.Ingredient;
 import com.kitchenbook.recipes.entity.Recipe;
 import com.kitchenbook.recipes.entity.RecipeIngredient;
+import com.kitchenbook.recipes.exception.RecipeNotFoundException;
 import com.kitchenbook.recipes.mapper.RecipeMapper;
 import com.kitchenbook.recipes.repository.IngredientRepository;
 import com.kitchenbook.recipes.repository.RecipeRepository;
@@ -81,5 +82,11 @@ public class RecipeService {
 	             .orElseThrow(() -> new RuntimeException("Recipe not found with id " + id));
 	
 		return RecipeMapper.RecipeToDto(recipe);
+	}
+
+	public void deleteById(Long id) {
+		Recipe recipe = recipeRepository.findById(id)
+				.orElseThrow(() -> new RecipeNotFoundException(id));
+	    recipeRepository.delete(recipe);
 	}
 }
