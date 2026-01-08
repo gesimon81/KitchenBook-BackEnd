@@ -29,6 +29,8 @@ public class RecipeService {
 	}
 	
 	public RecipeResponseDto create(RecipeCreateDto dto) {
+		System.out.println("Create() service");
+		
 		Recipe recipe = new Recipe();
 		recipe.setTitle(dto.title());
 		recipe.setDescription(dto.description());

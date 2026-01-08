@@ -1,32 +1,32 @@
 -- =========================
 -- INGREDIENTS
 -- =========================
-INSERT INTO ingredient (id, name) VALUES (1, 'Poulet');
-INSERT INTO ingredient (id, name) VALUES (2, 'Pâtes');
-INSERT INTO ingredient (id, name) VALUES (3, 'Tomates');
-INSERT INTO ingredient (id, name) VALUES (4, 'Ail');
-INSERT INTO ingredient (id, name) VALUES (5, 'Oignon');
-INSERT INTO ingredient (id, name) VALUES (6, 'Huile d''olive');
-INSERT INTO ingredient (id, name) VALUES (7, 'Sel');
-INSERT INTO ingredient (id, name) VALUES (8, 'Poivre');
-INSERT INTO ingredient (id, name) VALUES (9, 'Parmesan');
-INSERT INTO ingredient (id, name) VALUES (10, 'Basilic');
+INSERT INTO ingredient (name) VALUES ('Poulet');
+INSERT INTO ingredient (name) VALUES ('Pâtes');
+INSERT INTO ingredient (name) VALUES ('Tomates');
+INSERT INTO ingredient (name) VALUES ('Ail');
+INSERT INTO ingredient (name) VALUES ('Oignon');
+INSERT INTO ingredient (name) VALUES ('Huile d''olive');
+INSERT INTO ingredient (name) VALUES ('Sel');
+INSERT INTO ingredient (name) VALUES ('Poivre');
+INSERT INTO ingredient (name) VALUES ('Parmesan');
+INSERT INTO ingredient (name) VALUES ('Basilic');
 
 -- =========================
 -- RECIPES
 -- =========================
-INSERT INTO recipe (id, title, description, servings)
-VALUES (1, 'Poulet à l’ail et à l’huile d’olive',
+INSERT INTO recipe (title, description, servings)
+VALUES ('Poulet à l’ail et à l’huile d’olive',
         'Poulet rôti simple et savoureux à l’ail et à l’huile d’olive.',
         4);
 
-INSERT INTO recipe (id, title, description, servings)
-VALUES (2, 'Pâtes à la tomate et au basilic',
+INSERT INTO recipe (title, description, servings)
+VALUES ('Pâtes à la tomate et au basilic',
         'Recette classique de pâtes italiennes, rapide et efficace.',
         2);
 
-INSERT INTO recipe (id, title, description, servings)
-VALUES (3, 'Poulet aux pâtes et parmesan',
+INSERT INTO recipe (title, description, servings)
+VALUES ('Poulet aux pâtes et parmesan',
         'Plat complet associant poulet, pâtes et fromage.',
         3);
 
