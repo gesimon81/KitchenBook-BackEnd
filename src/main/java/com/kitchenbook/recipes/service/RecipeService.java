@@ -8,12 +8,16 @@ import org.springframework.transaction.annotation.Transactional;
 import com.kitchenbook.recipes.dto.RecipeCreateDto;
 import com.kitchenbook.recipes.dto.RecipeIngredientResponseDto;
 import com.kitchenbook.recipes.dto.RecipeResponseDto;
+import com.kitchenbook.recipes.dto.RecipeUpdateDto;
 import com.kitchenbook.recipes.entity.Ingredient;
 import com.kitchenbook.recipes.entity.Recipe;
 import com.kitchenbook.recipes.entity.RecipeIngredient;
+import com.kitchenbook.recipes.exception.RecipeNotFoundException;
 import com.kitchenbook.recipes.mapper.RecipeMapper;
 import com.kitchenbook.recipes.repository.IngredientRepository;
 import com.kitchenbook.recipes.repository.RecipeRepository;
+
+import jakarta.validation.Valid;
 
 @Service 		//contient la logique métier, orchestre les repositories
 @Transactional 	//gère les transactions managers (JPA, JDBC...), spring gère la transaction puis commit ou rollback selon le résultat
@@ -28,6 +32,8 @@ public class RecipeService {
 	}
 	
 	public RecipeResponseDto create(RecipeCreateDto dto) {
+		System.out.println("Create() service");
+		
 		Recipe recipe = new Recipe();
 		recipe.setTitle(dto.title());
 		recipe.setDescription(dto.description());
@@ -81,5 +87,52 @@ public class RecipeService {
 	             .orElseThrow(() -> new RuntimeException("Recipe not found with id " + id));
 	
 		return RecipeMapper.RecipeToDto(recipe);
+	}
+
+	public void deleteById(Long id) {
+		Recipe recipe = recipeRepository.findById(id)
+				.orElseThrow(() -> new RecipeNotFoundException(id));
+	    recipeRepository.delete(recipe);
+	}
+
+	//Signification du PUT en REST = Remplacement des données, pas une mise à jour partielle
+	public RecipeResponseDto update(Long id, @Valid RecipeUpdateDto dto) {
+		Recipe recipe = recipeRepository.findById(id)
+				.orElseThrow(() -> new RecipeNotFoundException(id));
+		
+		//Mettre à jour la Recipe avec les nouvelles données
+		recipe.setTitle(dto.title());
+		recipe.setDescription(dto.description());
+		recipe.setServings(dto.servings());
+		
+		if(dto.ingredients() != null) {
+			recipe.getRecipeIngredients().clear();
+			
+			dto.ingredients().forEach(i -> {
+				//find or create Ingredient
+				Ingredient ingredient = ingredientRepository.
+						findByNameIgnoreCase(i.name()).
+						orElseGet(() -> {
+							Ingredient newIngredient = new Ingredient();
+							newIngredient.setName(i.name());
+							return ingredientRepository.save(newIngredient);
+						});
+				
+				//create pivot entity RecipeIngredient
+				RecipeIngredient recipeIngredient = new RecipeIngredient();
+				recipeIngredient.setRecipe(recipe);
+				recipeIngredient.setIngredient(ingredient);
+				recipeIngredient.setQuantity(i.quantity());
+				recipeIngredient.setUnit(i.unit());
+				
+				//link to the recipe
+				recipe.getRecipeIngredients().add(recipeIngredient);
+			});
+		}
+
+		//Enregistrer la recette modifiée en base de données
+		Recipe savedRecipe = recipeRepository.save(recipe);
+		
+		return RecipeMapper.RecipeToDto(savedRecipe);
 	}
 }
