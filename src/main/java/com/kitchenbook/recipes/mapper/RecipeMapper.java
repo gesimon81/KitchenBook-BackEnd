@@ -2,6 +2,7 @@ package com.kitchenbook.recipes.mapper;
 
 import com.kitchenbook.recipes.dto.RecipeIngredientResponseDto;
 import com.kitchenbook.recipes.dto.RecipeResponseDto;
+import com.kitchenbook.recipes.dto.StepDto;
 import com.kitchenbook.recipes.entity.Recipe;
 
 /**
@@ -19,6 +20,7 @@ public class RecipeMapper {
 				recipe.getTitle(), 
 				recipe.getDescription(), 
 				recipe.getServings(), 
+				recipe.getImageUrl(),
 				recipe.getRecipeIngredients()
                         	.stream()
                         	.map(ri -> new RecipeIngredientResponseDto(
@@ -27,7 +29,14 @@ public class RecipeMapper {
                         			ri.getQuantity(), 
                         			ri.getUnit()
                 			))
-                        	.toList()
+                        	.toList(),
+            	recipe.getSteps()
+               				.stream()
+               				.map(s -> new StepDto(
+               						s.getStepOrder(),
+               						s.getContent()
+               				))
+               				.toList()
     	);
 	}
 }

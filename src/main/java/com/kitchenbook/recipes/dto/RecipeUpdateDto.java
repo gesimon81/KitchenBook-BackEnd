@@ -9,4 +9,7 @@ public record RecipeUpdateDto(
 		@NotBlank String title,
         String description,
         @NotNull Integer servings,
-        List<RecipeIngredientCreateDto> ingredients) {}
+        String imageUrl,
+        List<RecipeIngredientCreateDto> ingredients,
+        List<StepDto> steps
+        ) {}
