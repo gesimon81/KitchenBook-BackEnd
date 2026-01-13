@@ -9,9 +9,11 @@ import com.kitchenbook.recipes.dto.RecipeCreateDto;
 import com.kitchenbook.recipes.dto.RecipeIngredientResponseDto;
 import com.kitchenbook.recipes.dto.RecipeResponseDto;
 import com.kitchenbook.recipes.dto.RecipeUpdateDto;
+import com.kitchenbook.recipes.dto.StepDto;
 import com.kitchenbook.recipes.entity.Ingredient;
 import com.kitchenbook.recipes.entity.Recipe;
 import com.kitchenbook.recipes.entity.RecipeIngredient;
+import com.kitchenbook.recipes.entity.Step;
 import com.kitchenbook.recipes.exception.RecipeNotFoundException;
 import com.kitchenbook.recipes.mapper.RecipeMapper;
 import com.kitchenbook.recipes.repository.IngredientRepository;
@@ -38,6 +40,7 @@ public class RecipeService {
 		recipe.setTitle(dto.title());
 		recipe.setDescription(dto.description());
 		recipe.setServings(dto.servings());
+		recipe.setImageUrl(dto.imageUrl());
 		
 		if(dto.ingredients() != null) {
 			dto.ingredients().forEach(i -> {
@@ -60,6 +63,18 @@ public class RecipeService {
 				//link to the recipe
 				recipe.getRecipeIngredients().add(recipeIngredient);
 			});
+		}
+		
+		if(dto.steps() != null) {
+			dto.steps().forEach(s -> {
+				Step step = new Step();
+				step.setRecipe(recipe);
+				step.setStepOrder(s.stepOrder());
+				step.setContent(s.content());
+				
+				//link to the recipe
+				recipe.getSteps().add(step);
+			});	
 		}
 		
 		//Enregistrer la nouvelle recette en base de données
@@ -128,6 +143,21 @@ public class RecipeService {
 				//link to the recipe
 				recipe.getRecipeIngredients().add(recipeIngredient);
 			});
+		}
+		
+		if(dto.steps() != null) {
+		    recipe.getSteps().clear();  // supprime automatiquement les anciennes étapes
+		    recipeRepository.flush();	// force la suppression en bdd avant de pouvoir faire l'ajout
+		    
+		    int order = 1; //Gestion de l'ordre côté backend pour sécuriser les données client
+		    for (StepDto s : dto.steps()) {
+		        Step step = new Step();
+		        step.setRecipe(recipe);
+		        step.setStepOrder(order++);
+		        step.setContent(s.content());
+		        
+		        recipe.getSteps().add(step);
+		    }
 		}
 
 		//Enregistrer la recette modifiée en base de données

@@ -26,6 +26,5 @@ public class Ingredient {
     @OneToMany(mappedBy = "ingredient")
     private List<RecipeIngredient> recipeIngredients = new ArrayList<>();
 
-    // getters/setters
 }
 

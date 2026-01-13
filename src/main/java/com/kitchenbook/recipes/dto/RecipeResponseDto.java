@@ -11,4 +11,7 @@ public record RecipeResponseDto(
         String title,
         String description,
         Integer servings,
-        List<RecipeIngredientResponseDto> ingredients) {}
+        String imageUrl,
+        List<RecipeIngredientResponseDto> ingredients,
+        List<StepDto> steps
+        ) {}

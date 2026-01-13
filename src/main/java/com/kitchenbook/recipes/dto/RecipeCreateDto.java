@@ -13,5 +13,7 @@ public record RecipeCreateDto(
 		@NotBlank String title,
         String description,
         @NotNull Integer servings,
-        List<RecipeIngredientCreateDto> ingredients
+        String imageUrl,
+        List<RecipeIngredientCreateDto> ingredients,
+        List<StepDto> steps
 		) {}
